@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 54" fill="none">
+  <defs>
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="bgBox" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(3, 3)">
+    <rect width="48" height="48" rx="12" fill="url(#bgBox)" stroke="url(#headerGrad)" stroke-width="1.5"/>
+    <rect x="11" y="15" width="4.5" height="20" rx="2.25" fill="url(#headerGrad)"/>
+    <circle cx="13.25" cy="11.5" r="2" fill="#38bdf8"/>
+    <path d="M20 15L24.5 35L29 22L33.5 35L38 15" stroke="url(#headerGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(62, 0)">
+    <text x="0" y="32" font-family="'Plus Jakarta Sans', 'Trebuchet MS', sans-serif" font-weight="900" font-size="22" letter-spacing="0.5" fill="#ffffff">IMPACTO<tspan fill="#06b6d4">WEB</tspan></text>
+    <text x="1" y="44" font-family="'Plus Jakarta Sans', 'Trebuchet MS', sans-serif" font-weight="600" font-size="8.5" letter-spacing="2.2" fill="#94a3b8">DIGITAL &amp; PERFORMANCE</text>
+  </g>
+</svg>

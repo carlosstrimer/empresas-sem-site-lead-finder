@@ -23,6 +23,7 @@ summary { cursor: pointer; font-weight: 700; color: #164d70; }
 .align-end { display: flex; align-items: end; }
 .align-end button { width: 100%; }
 .full { width: 100%; margin-top: 8px; }
+.dashboard-launch { margin: 0 0 11px; min-height: 42px; font-size: 13px; }
 .hint { font-size: 11px; line-height: 1.4; color: #607486; margin: 8px 0 0; }
 a { color: #0865a5; }
 .actions { display: flex; gap: 8px; margin-top: 12px; }

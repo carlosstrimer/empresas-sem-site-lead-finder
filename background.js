@@ -161,6 +161,30 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         await log(`${source}: ${added} lead(s) novo(s) importado(s).`);
         return { added };
       }
+      case "IMPORT_BACKUP": {
+        const data = msg.data;
+        if (data?.format !== "empresas-sem-site-backup" || data.version !== 1 || !Array.isArray(data.leads) || data.leads.length > 10000) throw new Error("Backup inválido ou acima de 10 mil leads.");
+        const incoming = data.leads.map(row => LeadCore.normalizeLead(row || {})).filter(lead => lead.nome && lead.sourceId);
+        let added = 0;
+        await changeState(state => {
+          for (const lead of incoming) {
+            const index = state.leads.findIndex(old => LeadCore.sameLead(old, lead));
+            if (index < 0) { state.leads.push(lead); added++; }
+            else state.leads[index] = LeadCore.mergeLead(state.leads[index], lead);
+          }
+          if (data.messageSettings && typeof data.messageSettings === "object") {
+            state.messageSettings = Object.fromEntries(Object.keys(LeadMessages.DEFAULT_SETTINGS).map(key =>
+              [key, String(data.messageSettings[key] ?? LeadMessages.DEFAULT_SETTINGS[key]).trim().slice(0, 300)]));
+          }
+          if (data.messageTemplates && typeof data.messageTemplates === "object") {
+            state.messageTemplates = Object.fromEntries(LeadMessages.TONES.map(key =>
+              [key, String(data.messageTemplates[key] || LeadMessages.DEFAULT_TEMPLATES[key]).slice(0, 2000)]));
+          }
+          state.logs.push(`${new Date().toLocaleTimeString("pt-BR")} Backup importado: ${added} lead(s) novo(s).`);
+          state.logs = state.logs.slice(-100);
+        });
+        return { added };
+      }
       case "UPDATE_MESSAGE_SETTINGS": await changeState(state => {
         const input = msg.settings || {};
         state.messageSettings = Object.fromEntries(Object.keys(LeadMessages.DEFAULT_SETTINGS).map(key =>

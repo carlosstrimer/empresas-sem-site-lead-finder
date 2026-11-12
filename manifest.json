@@ -1,10 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Empresas Sem Site — Leads e Mensagens",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Pesquisa, importa, organiza leads e prepara mensagens personalizadas para contato manual.",
+  "icons": { "48": "assets/impacto-web-icon-48.png", "128": "assets/impacto-web-icon-192.png" },
   "permissions": ["storage", "tabs", "scripting", "unlimitedStorage", "clipboardWrite"],
   "host_permissions": ["https://www.google.com/maps/*", "https://maps.google.com/*", "https://overpass-api.de/api/*", "https://overpass.private.coffee/api/*", "https://www.empresaqui.com.br/acesso/RetornoJson.php*"],
   "background": { "service_worker": "background.js" },
-  "action": { "default_popup": "popup.html", "default_title": "Empresas Sem Site" }
+  "options_page": "dashboard.html",
+  "action": { "default_popup": "popup.html", "default_title": "Empresas Sem Site", "default_icon": { "48": "assets/impacto-web-icon-48.png", "128": "assets/impacto-web-icon-192.png" } }
 }

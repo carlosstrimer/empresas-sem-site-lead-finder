@@ -46,7 +46,7 @@
     const cnpj = digits(raw.cnpj);
     const sourceId = trim(raw.sourceId) || (cnpj.length === 14 ? cnpj : `${fold(raw.nome)}|${fold(raw.endereco)}|${digits(raw.telefone)}`);
     const lead = {
-      id: trim(raw.id) || `${source}:${sourceId}`, source, sourceId, cnpj: cnpj.length === 14 ? cnpj : "",
+      id: trim(raw.id) || `${source}:${sourceId}`, source, sources: Array.from(new Set([source, ...(Array.isArray(raw.sources) ? raw.sources.filter(item => typeof item === "string" && item.length < 100) : [])])), sourceId, cnpj: cnpj.length === 14 ? cnpj : "",
       nome: trim(raw.nome), telefone: trim(raw.telefone), email: trim(raw.email), endereco: trim(raw.endereco), instagram: instagramUrl(raw.instagram),
       categoria: trim(raw.categoria), siteInformado: site.site, reason, sourceUrl: urlOf(raw.sourceUrl),
       stage: STAGES.includes(raw.stage) ? raw.stage : "Novo", notes: trim(raw.notes).slice(0, 1000), reasonManual: raw.reasonManual === true || raw.reasonManual === "true",
@@ -69,7 +69,7 @@
     for (const key of ["cnpj", "telefone", "email", "endereco", "categoria", "siteInformado", "sourceUrl", "instagram", "messageText", "followUpDate", "previewUrl"]) if (!merged[key] && incoming[key]) merged[key] = incoming[key];
     if (!old.messageText && incoming.messageText) merged.messageStatus = incoming.messageStatus;
     if (incoming.siteInformado && !old.siteInformado && !old.reasonManual) merged.reason = incoming.reason;
-    merged.sources = Array.from(new Set([...(old.sources || [old.source]), incoming.source]));
+    merged.sources = Array.from(new Set([...(old.sources || [old.source]), ...(incoming.sources || [incoming.source])]));
     merged.score = score(merged);
     merged.updatedAt = Date.now();
     return merged;

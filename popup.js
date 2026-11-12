@@ -271,6 +271,7 @@ async function importMaps() {
   message(`${added} lead(s) novo(s) importado(s) do arquivo.`);
 }
 $("source").addEventListener("change", selectedSource);
+$("open-dashboard").addEventListener("click", () => chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") }).catch(error => message(error.message)));
 $("maps-import").addEventListener("click", () => importMaps().catch(error => message(error.message)));
 $("manual-add").addEventListener("click", async () => {
   try {
