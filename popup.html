@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Empresas Sem Site</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Empresas Sem Site</h1>
+    <p>Pesquisa e funil de oportunidades</p>
+  </header>
+  <main>
+    <section class="panel">
+      <label for="source">Fonte</label>
+      <select id="source">
+        <option value="maps">Google Maps</option>
+        <option value="osm">OpenStreetMap</option>
+        <option value="empresaqui">EmpresAqui</option>
+      </select>
+      <div id="maps-fields" class="source-fields">
+        <label for="maps-keyword">Segmento e cidade</label>
+        <input id="maps-keyword" type="text" placeholder="Ex.: barbearia em Campinas">
+        <details class="manual-box">
+          <summary>Importar ou cadastrar lead sem script na página</summary>
+          <p class="hint">Se o navegador bloquear a coleta automática, você ainda pode registrar dados que obteve no Maps, sem instalar outra extensão.</p>
+          <label for="maps-import-file">Arquivo CSV ou JSON</label>
+          <input id="maps-import-file" type="file" accept=".csv,.tsv,.json,text/csv,application/json">
+          <button id="maps-import" type="button" class="secondary full">Importar leads do arquivo</button>
+          <div class="grid two">
+            <div><label for="manual-name">Nome da empresa</label><input id="manual-name" type="text"></div>
+            <div><label for="manual-phone">Telefone</label><input id="manual-phone" type="tel"></div>
+          </div>
+          <label for="manual-site">Site ou rede informada</label><input id="manual-site" type="text" placeholder="https://...">
+          <label for="manual-address">Endereço</label><input id="manual-address" type="text">
+          <label for="manual-url">Link do Google Maps</label><input id="manual-url" type="url" placeholder="https://www.google.com/maps/place/..."><br>
+          <button id="manual-add" type="button" class="secondary full">Adicionar ao funil</button>
+        </details>
+      </div>
+      <div id="osm-fields" class="source-fields" hidden>
+        <label for="osm-keyword">Segmento ou nome</label>
+        <input id="osm-keyword" type="text" placeholder="Ex.: restaurante, barbearia, padaria">
+        <div class="grid two">
+          <div><label for="latitude">Latitude</label><input id="latitude" type="number" step="any" placeholder="-23.5505"></div>
+          <div><label for="longitude">Longitude</label><input id="longitude" type="number" step="any" placeholder="-46.6333"></div>
+        </div>
+        <div class="grid two">
+          <div><label for="radius">Raio em metros</label><input id="radius" type="number" min="500" max="10000" value="3000"></div>
+          <div class="align-end"><button id="map-center" type="button" class="secondary">Usar centro da aba OSM</button></div>
+        </div>
+        <p class="hint">Abra <a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>, encontre a cidade e ajuste o mapa. O botão lê o centro da aba ativa.</p>
+      </div>
+      <div id="empresaqui-fields" class="source-fields" hidden>
+        <label for="import-file">Exportação CSV ou JSON do EmpresAqui</label>
+        <input id="import-file" type="file" accept=".csv,.json,text/csv,application/json">
+        <p class="hint">Exporte sua lista na plataforma e importe o arquivo aqui. A API oficial não disponibiliza busca de listas por filtros.</p>
+        <div class="grid two">
+          <div><label for="empresaqui-cnpj">Consulta individual: CNPJ</label><input id="empresaqui-cnpj" type="text" inputmode="numeric" placeholder="00.000.000/0000-00"></div>
+          <div><label for="empresaqui-token">Token da API</label><input id="empresaqui-token" type="password" autocomplete="off" placeholder="Token do seu plano"></div>
+        </div>
+        <button id="empresaqui-lookup" type="button" class="secondary full">Consultar CNPJ</button>
+        <p class="hint">O token é usado apenas na consulta e não é salvo.</p>
+      </div>
+      <div id="limit-wrap">
+        <label for="limit">Máximo de empresas na pesquisa</label>
+        <input id="limit" type="number" min="1" max="500" value="20">
+      </div>
+      <div class="actions"><button id="start" type="button" class="primary">Iniciar pesquisa</button><button id="stop" type="button" class="secondary" disabled>Parar</button></div>
+      <div id="message" role="status" aria-live="polite"></div>
+    </section>
+    <section class="panel">
+      <details id="message-settings">
+        <summary>Mensagens personalizadas · configurar</summary>
+        <p class="hint">Modelos adaptados da pasta de mensagens. Edite antes de usar; nenhuma mensagem é enviada pela extensão.</p>
+        <div class="grid two">
+          <div><label for="cfg-company">Sua empresa</label><input id="cfg-company" type="text" value="Impacto Web"></div>
+          <div><label for="cfg-member">Seu nome</label><input id="cfg-member" type="text" placeholder="Nome do responsável"></div>
+        </div>
+        <label for="cfg-offer">Oferta</label><input id="cfg-offer" type="text" value="criação de sites">
+        <label for="cfg-cta">Convite final</label><input id="cfg-cta" type="text" value="posso te mostrar uma ideia para a presença digital da empresa?">
+        <label for="cfg-tone">Tom padrão</label><select id="cfg-tone"><option value="profissional">Profissional</option><option value="curta">Curta</option><option value="curiosidade">Curiosidade</option><option value="direta">Direta</option></select>
+        <label for="template-tone">Editar modelo</label><select id="template-tone"><option value="profissional">Profissional</option><option value="curta">Curta</option><option value="curiosidade">Curiosidade</option><option value="direta">Direta</option><option value="previa_pronta">Prévia pronta</option></select>
+        <textarea id="template-text" rows="6" aria-label="Texto do modelo"></textarea>
+        <p class="hint">Campos: {saudacao}, {apresentacao}, {contexto}, {empresa}, {nossa_empresa}, {oferta}, {cta}, {preview_url}.</p>
+        <div class="actions"><button id="save-message-settings" type="button" class="primary">Salvar configuração</button><button id="reset-template" type="button" class="secondary">Restaurar modelo</button></div>
+      </details>
+    </section>
+    <section class="panel">
+      <h2>Funil <span id="total">0 leads</span></h2>
+      <div id="stages" class="stage-summary"></div>
+      <div class="grid two">
+        <div><label for="filter-source">Fonte</label><select id="filter-source"><option value="">Todas</option><option>Google Maps</option><option>OpenStreetMap</option><option>EmpresAqui</option></select></div>
+        <div><label for="filter-stage">Etapa</label><select id="filter-stage"><option value="">Todas</option></select></div>
+      </div>
+      <div class="grid two">
+        <div><label for="filter-reason">Oportunidade</label><select id="filter-reason"><option value="">Todas</option><option value="SEM_SITE">Sem site informado</option><option value="SO_WHATSAPP">Só WhatsApp</option><option value="SO_REDES">Só redes sociais</option><option value="SITE_QUEBRADO">Site quebrado (confirmado)</option><option value="SITE_A_VERIFICAR">Site a verificar</option><option value="DESCONHECIDO">Dados incompletos</option></select></div>
+        <div><label for="filter-search">Buscar lead</label><input id="filter-search" type="search" placeholder="Nome, CNPJ ou telefone"></div>
+      </div>
+      <label for="filter-message">Mensagem</label><select id="filter-message"><option value="">Todos os estados</option><option value="nao_gerada">Não gerada</option><option value="gerada">Gerada</option><option value="copiada">Copiada</option><option value="contatada">Contatada</option><option value="respondida">Respondida</option></select>
+      <div class="actions"><button id="csv" type="button" class="secondary" disabled>Exportar CSV</button><button id="json" type="button" class="secondary" disabled>Exportar JSON</button></div>
+      <p id="shown" class="hint"></p>
+      <div id="leads" class="leads"></div>
+    </section>
+    <section class="panel">
+      <h2>Atividade <button id="clear-log" type="button" class="text-button">Limpar</button></h2>
+      <div id="log" class="log"></div>
+    </section>
+    <p class="credit">Dados do OpenStreetMap: © <a href="https://www.openstreetmap.org/copyright" target="_blank">colaboradores do OpenStreetMap</a> (ODbL).</p>
+  </main>
+  <script src="core.js"></script>
+  <script src="message.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
